@@ -1,3 +1,4 @@
+import os
 import numpy as np
 
 try:
@@ -17,6 +18,8 @@ def plot_results(network: Network, X: np.ndarray, y: np.ndarray, loss_history: l
     if not HAS_MATPLOTLIB:
         return
 
+    os.makedirs("assets", exist_ok=True)
+
     # Loss convergence
     plt.figure(figsize=(7, 4))
     plt.plot(loss_history, color="#1f77b4", linewidth=2)
@@ -25,7 +28,7 @@ def plot_results(network: Network, X: np.ndarray, y: np.ndarray, loss_history: l
     plt.ylabel("Loss")
     plt.grid(True, linestyle="--", alpha=0.5)
     plt.tight_layout()
-    plt.savefig("loss.png", dpi=150)
+    plt.savefig("assets/loss.png", dpi=150)
     plt.close()
 
     # Decision boundary
@@ -47,7 +50,7 @@ def plot_results(network: Network, X: np.ndarray, y: np.ndarray, loss_history: l
     plt.title("Decision Boundary (Threshold = 0.5)")
     plt.legend()
     plt.tight_layout()
-    plt.savefig("decision_boundary.png", dpi=150)
+    plt.savefig("assets/decision_boundary.png", dpi=150)
     plt.close()
 
 

@@ -150,10 +150,15 @@ For complete derivations and matrix calculus notes, see [docs/mathematics.md](do
 
 On the continuous 2D XOR benchmark (300 samples, noise $\sigma = 0.08$):
 
+| Loss Convergence | Learned Decision Boundary |
+| :---: | :---: |
+| ![MSE Loss Convergence](assets/loss.png) | ![Decision Boundary](assets/decision_boundary.png) |
+| *Smooth MSE loss reduction across 3,000 epochs* | *Non-linear boundary separating XOR classes at 0.5 threshold* |
+
 * **Initial MSE Loss:** `1.7534` (50.00% random accuracy)
 * **Final MSE Loss:** `0.0482`
 * **Final Classification Accuracy:** **100.00%**
-* **Decision Boundary:** Visual verification confirms the 2 hidden sigmoid units warped the input space to form a curved decision boundary successfully separating all four XOR clusters.
+* **Non-Linear Separation:** As visualized above, the 2 hidden sigmoid units successfully warp the input feature space, learning a non-linear closed contour at the 0.5 threshold that cleanly separates both classes. A single linear perceptron cannot achieve this.
 
 ---
 

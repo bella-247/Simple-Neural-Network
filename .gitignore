@@ -3,7 +3,10 @@ __pycache__/
 *.pyo
 nn/__pycache__/
 .pytest_cache/
-*.png
+
+# Ignore loose images in root, but allow tracked documentation assets
+/*.png
+!assets/*.png
 
 # Private personal learning and study notes (local only)
 learning/
