@@ -4,3 +4,8 @@ __pycache__/
 nn/__pycache__/
 .pytest_cache/
 *.png
+
+# Local learning guides and private documentation (do not push to GitHub)
+docs/
+learning/
+notes/
