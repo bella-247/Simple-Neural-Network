@@ -1,88 +1,69 @@
-# Inside the Backward Pass: Neural Network Engine from Scratch
+# Simple Neural Network — From Scratch
 
 [![Python](https://img.shields.io/badge/Python-3.10%2B-blue.svg)](https://www.python.org/)
-[![NumPy](https://img.shields.io/badge/Dependency-NumPy%20Only-013243.svg)](https://numpy.org/)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
-[![Gradients](https://img.shields.io/badge/Gradient%20Check-PASSED%20(<1e--6)-brightgreen.svg)]()
-[![Status](https://img.shields.io/badge/Status-Completed-success.svg)]()
 
-A lightweight, modular neural network library built strictly from scratch using **NumPy** (no PyTorch, TensorFlow, or autograd packages). Designed to demystify and rigorously prove the mechanics of forward propagation, reverse automatic differentiation (backpropagation), and gradient descent optimization.
+A small neural network library built from scratch using only NumPy, as part of a capstone project on understanding backpropagation. No PyTorch, no TensorFlow, no autograd — just math and code.
 
 ---
 
-## 📋 Table of Contents
+## Table of Contents
 
-- [Project Purpose](#-project-purpose)
-- [System Architecture](#-system-architecture)
-- [Project Structure](#-project-structure)
-- [Installation](#-installation)
-- [How to Run](#-how-to-run)
-  - [1. Model Training & Decision Boundary Demo](#1-model-training--decision-boundary-demo)
-  - [2. Numerical Gradient Verification (Phase 3)](#2-numerical-gradient-verification-phase-3)
-  - [3. Hand-Trace Verification (Phase 1)](#3-hand-trace-verification-phase-1)
-- [Mathematical Summary](#-mathematical-summary)
-- [Experimental Results](#-experimental-results)
-- [Documentation](#-documentation)
-- [License](#-license)
+- [What This Is](#what-this-is)
+- [Project Structure](#project-structure)
+- [Installation](#installation)
+- [How to Run](#how-to-run)
+- [How It Works](#how-it-works)
+- [Results](#results)
+- [Docs](#docs)
+- [License](#license)
 
 ---
 
-## 🎯 Project Purpose
+## What This Is
 
-Modern deep learning frameworks abstract away derivative calculations behind black-box `.backward()` calls. The primary objectives of this capstone project are:
+When you call `loss.backward()` in PyTorch, a lot happens under the hood that most people never see. This project is about opening that black box.
 
-1. **Build a Modular Engine:** Implement foundational components (`Linear`, `Sigmoid`, `ReLU`, `Tanh`, `MSELoss`, `BCELoss`, `Network`) adhering to standard object-oriented layer interfaces.
-2. **Prove Gradient Correctness:** Rigorously validate analytical backpropagation gradients against symmetric two-sided finite difference approximations, ensuring relative errors strictly satisfy:
-   $$\text{Relative Error} < 10^{-6}$$
-3. **Solve Non-Linearly Separable Problems:** Demonstrate that a 2-layer network (2 inputs $\rightarrow$ 2 hidden neurons with Sigmoid $\rightarrow$ 1 output) learns non-linear decision boundaries on datasets that linear models cannot separate (XOR).
+I built every piece of the library by hand:
+- A `Linear` layer that computes `z = Wx + b` and knows how to backpropagate through itself
+- Activation functions (`Sigmoid`, `ReLU`, `Tanh`) with their own derivative implementations
+- Loss functions (`MSELoss`, `BCELoss`) that kick off the backward pass
+- A `Network` class that chains layers together and runs forward/backward in the right order
+- A `Trainer` that runs gradient descent to update weights
+
+The network is then trained on an XOR dataset — a classic problem that a straight line can't solve but a network with one hidden layer can.
+
+As a final check, every computed gradient is verified numerically by slightly nudging each weight and observing the change in loss. All gradients pass.
 
 ---
 
-## 🏛 System Architecture
-
-The engine coordinates computation through a sequential layer container that maintains the fundamental invariant of backpropagation:
+## Project Structure
 
 ```
-[Forward Pass: 0 -> N-1]
-Input X ──► Linear Layer ──► Sigmoid Activation ──► Linear Layer ──► MSE Loss
-
-[Backward Pass: N-1 -> 0]
-Input Grad ◄── Linear Layer ◄── Sigmoid Derivative ◄── Linear Layer ◄── dL/dŷ
-```
-
-- **Forward:** Each layer takes inputs, computes affine or non-linear outputs, and caches activations required for derivative calculation.
-- **Backward:** Layers consume upstream gradients from right-to-left, evaluate parameter gradients ($\frac{\partial L}{\partial W}, \frac{\partial L}{\partial b}$), and pass input gradients back upstream.
-
----
-
-## 📁 Project Structure
-
-```text
 Simple-Neural-Network/
-├── nn/                         # Core library package
-│   ├── __init__.py             # Public API exports
-│   ├── linear.py               # Fully connected affine layer
-│   ├── activations.py          # Sigmoid, ReLU, Tanh activation modules
-│   ├── losses.py               # MSELoss, BCELoss objective criteria
-│   └── network.py              # Sequential container (forward/backward)
-├── docs/                       # Technical & architectural specifications
-│   ├── architecture.md         # Engine architecture & design specifications
-│   ├── mathematics.md          # Complete mathematical derivations
-│   └── verification.md         # Gradient verification & validation protocol
-├── data.py                     # Synthetic XOR & Two Moons dataset generators
-├── trainer.py                  # SGD optimization & training loop
-├── main.py                     # End-to-end model training & boundary visualization
-├── grad_check.py               # Finite-difference numerical gradient checker
-├── verify_hand_trace.py        # Concrete single-sample hand-trace verification
-├── .gitignore                  # Git configuration
-└── LICENSE                     # Project license
+├── nn/
+│   ├── __init__.py        # Package exports
+│   ├── linear.py          # Linear layer (forward + backward)
+│   ├── activations.py     # Sigmoid, ReLU, Tanh
+│   ├── losses.py          # MSELoss, BCELoss
+│   └── network.py         # Sequential network container
+├── docs/
+│   ├── architecture.md    # System design overview
+│   ├── mathematics.md     # Math behind each layer
+│   └── verification.md    # How gradient checking works
+├── assets/
+│   ├── loss.png
+│   └── decision_boundary.png
+├── data.py                # XOR and Two Moons dataset generators
+├── trainer.py             # Training loop and SGD optimizer
+├── main.py                # Runs the full training demo
+├── grad_check.py          # Numerical gradient verification
+└── verify_hand_trace.py   # Matches code output to paper calculations
 ```
 
 ---
 
-## 🚀 Installation
-
-Ensure Python 3.8+ is installed. Clone the repository and install the standard dependencies:
+## Installation
 
 ```bash
 git clone https://github.com/abelmekonen/Simple-Neural-Network.git
@@ -90,88 +71,77 @@ cd Simple-Neural-Network
 pip install numpy matplotlib
 ```
 
-*(Note: Matplotlib is used solely for plotting final decision boundary contours; the neural network engine itself relies strictly on NumPy.)*
+Matplotlib is only used for the plots. The network itself runs on NumPy alone.
 
 ---
 
-## 💻 How to Run
+## How to Run
 
-### 1. Model Training & Decision Boundary Demo
-
-Train the 2-2-1 network on the non-linear XOR dataset:
-
+**Train the network and generate plots:**
 ```bash
 python main.py
 ```
 
-**Output:**
-- Displays loss and classification accuracy per epoch.
-- Exports `loss.png` (training convergence curve).
-- Exports `decision_boundary.png` (2D non-linear contour plot).
-
-### 2. Numerical Gradient Verification (Phase 3)
-
-Verify analytical backpropagation gradients against two-sided finite difference approximations:
-
+**Verify gradients numerically:**
 ```bash
 python grad_check.py
 ```
 
-Computes relative error:
-$$\text{RelError} = \frac{|g_{\text{analytical}} - g_{\text{numerical}}|}{\max(10^{-8}, |g_{\text{analytical}}| + |g_{\text{numerical}}|)}$$
-
-All parameters achieve relative errors $< 10^{-10}$, well surpassing the $10^{-6}$ passing threshold.
-
-### 3. Hand-Trace Verification (Phase 1)
-
-Compare exact numerical values against manual paper calculations for a deterministic single-sample forward and backward pass:
-
+**Compare code output against hand calculations (Phase 1):**
 ```bash
 python verify_hand_trace.py
 ```
 
 ---
 
-## 📐 Mathematical Summary
+## How It Works
 
-| Component | Forward Equation | Backward Derivative |
-| :--- | :--- | :--- |
-| **Linear Layer** | $z = XW^T + b$ | $\frac{\partial L}{\partial W} = G^T X, \quad \frac{\partial L}{\partial b} = \sum G, \quad \frac{\partial L}{\partial X} = G W$ |
-| **Sigmoid** | $\sigma(z) = \frac{1}{1 + e^{-z}}$ | $\sigma'(z) = \sigma(z)(1 - \sigma(z))$ |
-| **ReLU** | $f(z) = \max(0, z)$ | $f'(z) = \mathbb{I}(z > 0)$ |
-| **Tanh** | $\tanh(z) = \frac{e^z - e^{-z}}{e^z + e^{-z}}$ | $\tanh'(z) = 1 - \tanh^2(z)$ |
-| **MSE Loss** | $L = \frac{1}{N}\sum (\hat{y} - y)^2$ | $\frac{\partial L}{\partial \hat{y}} = \frac{2}{N}(\hat{y} - y)$ |
+The network is small by design — 2 inputs, 2 hidden neurons with Sigmoid, 1 output:
 
-For complete derivations and matrix calculus notes, see [docs/mathematics.md](docs/mathematics.md).
+```
+x = [x1, x2]
+       │
+   [Linear]      z1 = W1·x + b1
+       │
+   [Sigmoid]     a1 = 1 / (1 + e^-z1)
+       │
+   [Linear]      ŷ  = W2·a1 + b2
+       │
+   [MSELoss]     L  = mean((ŷ - y)²)
+```
+
+**Forward pass:** data flows left to right, each layer computes its output and caches what it needs for the backward step.
+
+**Backward pass:** gradients flow right to left through the same layers in reverse order. Each layer multiplies the incoming gradient by its local derivative — this is the chain rule applied in code.
+
+**Parameter update (SGD):**
+```
+W = W - learning_rate * dW
+b = b - learning_rate * db
+```
 
 ---
 
-## 📊 Experimental Results
+## Results
 
-On the continuous 2D XOR benchmark (300 samples, noise $\sigma = 0.08$):
+Trained on XOR (300 points, 3000 epochs, lr=0.1):
 
-| Loss Convergence | Learned Decision Boundary |
+| Loss Curve | Decision Boundary |
 | :---: | :---: |
-| ![MSE Loss Convergence](assets/loss.png) | ![Decision Boundary](assets/decision_boundary.png) |
-| *Smooth MSE loss reduction across 3,000 epochs* | *Non-linear boundary separating XOR classes at 0.5 threshold* |
+| ![Loss](assets/loss.png) | ![Boundary](assets/decision_boundary.png) |
 
-* **Initial MSE Loss:** `1.7534` (50.00% random accuracy)
-* **Final MSE Loss:** `0.0482`
-* **Final Classification Accuracy:** **100.00%**
-* **Non-Linear Separation:** As visualized above, the 2 hidden sigmoid units successfully warp the input feature space, learning a non-linear closed contour at the 0.5 threshold that cleanly separates both classes. A single linear perceptron cannot achieve this.
+The network converges from random guessing (50%) to **100% accuracy**. The decision boundary plot shows the non-linear boundary the hidden layer learned — something no linear model could draw.
 
 ---
 
-## 📖 Documentation
+## Docs
 
-Detailed technical references are located in the `docs/` folder:
-- [Architecture Specifications](docs/architecture.md)
-- [Mathematical Formulations](docs/mathematics.md)
-- [Verification & Validation Protocol](docs/verification.md)
+- [Architecture overview](docs/architecture.md)
+- [Math for each layer](docs/mathematics.md)
+- [Gradient verification explained](docs/verification.md)
 
 ---
 
-## 📄 License
+## License
 
-This project is licensed under the MIT License — see the [LICENSE](LICENSE) file for details.
-
+MIT
