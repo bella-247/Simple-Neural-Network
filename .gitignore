@@ -1,0 +1,6 @@
+__pycache__/
+*.pyc
+*.pyo
+nn/__pycache__/
+.pytest_cache/
+*.png
