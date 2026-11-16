@@ -40,3 +40,4 @@ For an isolated forward and backward step on a single 2D sample $x = [0.5, 0.8]$
 * Every intermediate variable ($z_1, a_1, z_2, \hat{y}, L$) is derived on paper.
 * All layer parameter gradients ($dW_1, db_1, dW_2, db_2$) are manually derived.
 * Running `python verify_hand_trace.py` outputs identical numbers to 8 decimal digits, proving complete analytical agreement.
+

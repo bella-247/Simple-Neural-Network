@@ -55,3 +55,4 @@ This repository implements a lightweight, modular deep learning framework constr
 ### 5. `trainer.Trainer`
 * **Role:** Coordinates mini-batch iteration, gradient descent updates, and epoch metrics tracking.
 * **Update Scheme:** Stochastic Gradient Descent (SGD) parameterized by learning rate $\eta$.
+

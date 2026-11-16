@@ -69,3 +69,4 @@ Parameters $\theta \in \{W, b\}$ are updated per epoch via standard first-order 
 $$\theta^{(t+1)} = \theta^{(t)} - \eta \cdot \frac{\partial L}{\partial \theta}$$
 
 where $\eta > 0$ represents the configured learning rate scalar.
+

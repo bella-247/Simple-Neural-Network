@@ -169,3 +169,4 @@ Detailed technical references are located in the `docs/` folder:
 ## 📄 License
 
 This project is licensed under the MIT License — see the [LICENSE](LICENSE) file for details.
+
