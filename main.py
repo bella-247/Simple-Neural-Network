@@ -1,4 +1,5 @@
 import os
+import sys
 import numpy as np
 
 try:
@@ -14,11 +15,14 @@ from nn import Network, Linear, Sigmoid, MSELoss
 from trainer import Trainer
 
 
-def plot_results(network: Network, X: np.ndarray, y: np.ndarray, loss_history: list) -> None:
+def plot_results(
+    network: Network, X: np.ndarray, y: np.ndarray, loss_history: list, prefix: str = ""
+) -> None:
     if not HAS_MATPLOTLIB:
         return
 
     os.makedirs("assets", exist_ok=True)
+    tag = f"_{prefix}" if prefix else ""
 
     # Loss convergence
     plt.figure(figsize=(7, 4))
@@ -28,7 +32,7 @@ def plot_results(network: Network, X: np.ndarray, y: np.ndarray, loss_history: l
     plt.ylabel("Loss")
     plt.grid(True, linestyle="--", alpha=0.5)
     plt.tight_layout()
-    plt.savefig("assets/loss.png", dpi=150)
+    plt.savefig(f"assets/loss{tag}.png", dpi=150)
     plt.close()
 
     # Decision boundary
@@ -50,15 +54,21 @@ def plot_results(network: Network, X: np.ndarray, y: np.ndarray, loss_history: l
     plt.title("Decision Boundary (Threshold = 0.5)")
     plt.legend()
     plt.tight_layout()
-    plt.savefig("assets/decision_boundary.png", dpi=150)
+    plt.savefig(f"assets/decision_boundary{tag}.png", dpi=150)
     plt.close()
 
 
 def main():
     np.random.seed(42)
 
-    # 1. Dataset
-    X, y = data.make_xor(n_samples=300, noise=0.08, seed=42)
+    # 1. Dataset selection (default: xor, or pass 'moons')
+    dataset_name = sys.argv[1].lower() if len(sys.argv) > 1 else "xor"
+    if dataset_name == "moons":
+        print("Dataset: Two Moons")
+        X, y = data.make_moons(n_samples=300, noise=0.1, seed=42)
+    else:
+        print("Dataset: XOR")
+        X, y = data.make_xor(n_samples=300, noise=0.08, seed=42)
 
     # 2. Network architecture: 2 inputs -> 2 hidden (Sigmoid) -> 1 output
     model = Network([
@@ -77,7 +87,7 @@ def main():
     acc = np.mean(preds == y) * 100.0
     print(f"\nFinal Accuracy: {acc:.2f}% | Final Loss: {losses[-1]:.6f}")
 
-    # 5. Visualization
+    # 5. Visualization (saves to assets/)
     plot_results(model, X, y, losses)
 
 
