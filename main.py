@@ -2,13 +2,9 @@ import os
 import sys
 import numpy as np
 
-try:
-    import matplotlib
-    matplotlib.use("Agg")
-    import matplotlib.pyplot as plt
-    HAS_MATPLOTLIB = True
-except ImportError:
-    HAS_MATPLOTLIB = False
+import matplotlib
+matplotlib.use("Agg")
+import matplotlib.pyplot as plt
 
 import data
 from nn import Network, Linear, Sigmoid, MSELoss
@@ -18,9 +14,6 @@ from trainer import Trainer
 def plot_results(
     network: Network, X: np.ndarray, y: np.ndarray, loss_history: list, prefix: str = "xor"
 ) -> None:
-    if not HAS_MATPLOTLIB:
-        return
-
     os.makedirs("assets", exist_ok=True)
     loss_path = f"assets/{prefix}_loss.png"
     boundary_path = f"assets/{prefix}_decision_boundary.png"
