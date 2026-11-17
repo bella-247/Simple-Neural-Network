@@ -125,13 +125,21 @@ b = b - learning_rate * db
 
 ## Results
 
-Trained on XOR (300 points, 3000 epochs, lr=0.1):
+### 1. XOR Dataset (100% Accuracy)
 
 | Loss Curve | Decision Boundary |
 | :---: | :---: |
-| ![Loss](assets/loss.png) | ![Boundary](assets/decision_boundary.png) |
+| ![XOR Loss](assets/xor_loss.png) | ![XOR Boundary](assets/xor_decision_boundary.png) |
 
-The network converges from random guessing (50%) to **100% accuracy**. The decision boundary plot shows the non-linear boundary the hidden layer learned — something no linear model could draw.
+The network converges from random guessing (50%) to **100% accuracy**. The decision boundary plot shows the non-linear contour the hidden layer learned — separating all 4 clusters that no single line could divide.
+
+### 2. Two Moons Dataset (89% Accuracy)
+
+| Loss Curve | Decision Boundary |
+| :---: | :---: |
+| ![Two Moons Loss](assets/moons_loss.png) | ![Two Moons Boundary](assets/moons_decision_boundary.png) |
+
+The 2-hidden-neuron network carves out a curved boundary separating the two interlocking crescent moons.
 
 ---
 

@@ -16,23 +16,24 @@ from trainer import Trainer
 
 
 def plot_results(
-    network: Network, X: np.ndarray, y: np.ndarray, loss_history: list, prefix: str = ""
+    network: Network, X: np.ndarray, y: np.ndarray, loss_history: list, prefix: str = "xor"
 ) -> None:
     if not HAS_MATPLOTLIB:
         return
 
     os.makedirs("assets", exist_ok=True)
-    tag = f"_{prefix}" if prefix else ""
+    loss_path = f"assets/{prefix}_loss.png"
+    boundary_path = f"assets/{prefix}_decision_boundary.png"
 
     # Loss convergence
     plt.figure(figsize=(7, 4))
     plt.plot(loss_history, color="#1f77b4", linewidth=2)
-    plt.title("MSE Loss Convergence")
+    plt.title(f"MSE Loss Convergence ({prefix.upper()})")
     plt.xlabel("Epoch")
     plt.ylabel("Loss")
     plt.grid(True, linestyle="--", alpha=0.5)
     plt.tight_layout()
-    plt.savefig(f"assets/loss{tag}.png", dpi=150)
+    plt.savefig(loss_path, dpi=150)
     plt.close()
 
     # Decision boundary
@@ -51,11 +52,13 @@ def plot_results(
     plt.scatter(X[y_flat == 0, 0], X[y_flat == 0, 1], color="blue", edgecolor="k", s=30, label="Class 0")
     plt.scatter(X[y_flat == 1, 0], X[y_flat == 1, 1], color="red", edgecolor="k", s=30, label="Class 1")
 
-    plt.title("Decision Boundary (Threshold = 0.5)")
+    plt.title(f"Decision Boundary - {prefix.upper()} (Threshold = 0.5)")
     plt.legend()
     plt.tight_layout()
-    plt.savefig(f"assets/decision_boundary{tag}.png", dpi=150)
+    plt.savefig(boundary_path, dpi=150)
     plt.close()
+
+    print(f"Saved plots to {loss_path} and {boundary_path}")
 
 
 def main():
@@ -87,8 +90,8 @@ def main():
     acc = np.mean(preds == y) * 100.0
     print(f"\nFinal Accuracy: {acc:.2f}% | Final Loss: {losses[-1]:.6f}")
 
-    # 5. Visualization (saves to assets/)
-    plot_results(model, X, y, losses)
+    # 5. Visualization (saves with dataset prefix)
+    plot_results(model, X, y, losses, prefix=dataset_name)
 
 
 if __name__ == "__main__":
