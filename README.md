@@ -79,7 +79,8 @@ Matplotlib is only used for the plots. The network itself runs on NumPy alone.
 
 **Train the network and generate plots:**
 ```bash
-python main.py
+python main.py        # trains on XOR dataset (default)
+python main.py moons  # trains on Two Moons dataset
 ```
 
 **Verify gradients numerically:**
