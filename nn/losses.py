@@ -16,6 +16,7 @@ class MSELoss:
         return float(np.mean((y_pred - y_true) ** 2))
 
     def backward(self) -> np.ndarray:
+        # Seed gradient: dL/dŷ = 2 * (ŷ - y) / N
         return 2.0 * (self.y_pred - self.y_true) / self.n
 
 
@@ -30,6 +31,7 @@ class BCELoss:
         self.n = 0
 
     def forward(self, y_pred: np.ndarray, y_true: np.ndarray) -> float:
+        # Clip probabilities to avoid log(0) numerical instability
         self.y_pred = np.clip(y_pred, self._EPS, 1.0 - self._EPS)
         self.y_true = y_true
         self.n = y_pred.shape[0]
@@ -38,4 +40,5 @@ class BCELoss:
         )
 
     def backward(self) -> np.ndarray:
+        # Seed gradient: dL/dŷ = (1 / N) * [ -y / ŷ + (1 - y) / (1 - ŷ) ]
         return (-(self.y_true / self.y_pred) + (1 - self.y_true) / (1 - self.y_pred)) / self.n

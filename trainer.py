@@ -15,6 +15,7 @@ class Trainer:
         """Update trainable parameters using standard SGD."""
         for layer in self.network.layers:
             if hasattr(layer, "W") and layer.dW is not None:
+                # θ = θ - learning_rate * dL/dθ
                 layer.W -= self.learning_rate * layer.dW
                 layer.b -= self.learning_rate * layer.db
 
@@ -28,13 +29,16 @@ class Trainer:
         loss_history = []
 
         for epoch in range(1, epochs + 1):
+            # 1. Forward pass
             y_pred = self.network.forward(X)
             loss = self.criterion.forward(y_pred, y)
             loss_history.append(loss)
 
+            # 2. Backward pass (backpropagation)
             loss_grad = self.criterion.backward()
             self.network.backward(loss_grad)
 
+            # 3. Parameter update
             self.step_optimizer()
 
             if epoch % print_every == 0 or epoch == 1:
