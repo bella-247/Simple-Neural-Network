@@ -1,6 +1,6 @@
 # Gradient Verification & Correctness Protocol
 
-To ensure analytical gradient correctness, this repository employs two rigorous verification protocols: exact paper hand-trace arithmetic validation and finite-difference numerical gradient checking.
+To ensure analytical gradient correctness, this repository employs a rigorous finite-difference numerical gradient checking protocol.
 
 ---
 
@@ -32,12 +32,5 @@ $$\text{RelError} = \frac{|g_{\text{analytical}} - g_{\text{numerical}}|}{\max(1
 
 Empirical tests on all network parameters yield relative errors ranging between $10^{-10}$ and $10^{-13}$, well below the $10^{-6}$ threshold.
 
----
 
-## 3. Hand-Trace Verification Protocol
-
-For an isolated forward and backward step on a single 2D sample $x = [0.5, 0.8]$ and target $y = 1.0$:
-* Every intermediate variable ($z_1, a_1, z_2, \hat{y}, L$) is derived on paper.
-* All layer parameter gradients ($dW_1, db_1, dW_2, db_2$) are manually derived.
-* Running `python verify_hand_trace.py` outputs identical numbers to 8 decimal digits, proving complete analytical agreement.
 

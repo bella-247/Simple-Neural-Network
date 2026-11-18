@@ -12,13 +12,9 @@ This project implements a modular deep learning engine from scratch using only *
 
 ---
 
-## 2. Verification Milestones
+## 2. Numerical Gradient Verification
 
-### Phase 1: Paper Hand-Trace
-- Traced a deterministic single-sample forward and backward pass by hand on a 2-2-1 network ($x = [0.5, 0.8]$, $y = 1.0$).
-- Validated against [`verify_hand_trace.py`](verify_hand_trace.py): all 15 forward intermediate values and backward gradients matched manual calculations to **8 decimal places**.
-
-### Phase 3: Numerical Gradient Check
+To mathematically prove that the backpropagation engine is bug-free:
 - Implemented a two-sided finite difference gradient checker ([`grad_check.py`](grad_check.py)):
   $$\frac{\partial L}{\partial \theta} \approx \frac{L(\theta + \epsilon) - L(\theta - \epsilon)}{2\epsilon}, \quad \epsilon = 10^{-5}$$
 - **Result:** Every parameter in the network achieved a relative error between $1.2 \times 10^{-10}$ and $5.3 \times 10^{-13}$, easily surpassing the required $10^{-6}$ threshold and proving backpropagation correctness.

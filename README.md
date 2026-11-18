@@ -24,7 +24,7 @@ A small neural network library built from scratch using only NumPy, as part of a
 
 When you call `loss.backward()` in PyTorch, a lot happens under the hood that most people never see. This project is about opening that black box.
 
-I built every piece of the library by hand:
+I built every piece of the library from scratch:
 - A `Linear` layer that computes `z = Wx + b` and knows how to backpropagate through itself
 - Activation functions (`Sigmoid`, `ReLU`, `Tanh`) with their own derivative implementations
 - Loss functions (`MSELoss`, `BCELoss`) that kick off the backward pass
@@ -60,7 +60,6 @@ Simple-Neural-Network/
 ├── trainer.py             # Training loop and SGD optimizer
 ├── main.py                # Runs the full training demo
 ├── grad_check.py          # Numerical gradient verification
-├── verify_hand_trace.py   # Matches code output to paper calculations
 └── report.md              # One-page capstone findings report
 ```
 
@@ -89,11 +88,6 @@ python main.py moons  # trains on Two Moons dataset
 **Verify gradients numerically:**
 ```bash
 python grad_check.py
-```
-
-**Compare code output against hand calculations (Phase 1):**
-```bash
-python verify_hand_trace.py
 ```
 
 ---
