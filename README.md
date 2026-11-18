@@ -52,13 +52,16 @@ Simple-Neural-Network/
 │   ├── mathematics.md     # Math behind each layer
 │   └── verification.md    # How gradient checking works
 ├── assets/
-│   ├── loss.png
-│   └── decision_boundary.png
+│   ├── xor_loss.png
+│   ├── xor_decision_boundary.png
+│   ├── moons_loss.png
+│   └── moons_decision_boundary.png
 ├── data.py                # XOR and Two Moons dataset generators
 ├── trainer.py             # Training loop and SGD optimizer
 ├── main.py                # Runs the full training demo
 ├── grad_check.py          # Numerical gradient verification
-└── verify_hand_trace.py   # Matches code output to paper calculations
+├── verify_hand_trace.py   # Matches code output to paper calculations
+└── report.md              # One-page capstone findings report
 ```
 
 ---
