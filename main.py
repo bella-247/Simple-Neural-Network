@@ -76,7 +76,7 @@ def main():
     # 3. Train
     criterion = MSELoss()
     trainer = Trainer(model, criterion, learning_rate=0.1)
-    losses = trainer.fit(X, y, epochs=3000, print_every=200)
+    losses = trainer.fit(X, y, epochs=3000, print_every=100)
 
     # 4. Evaluation
     preds = (model.forward(X) >= 0.5).astype(int)

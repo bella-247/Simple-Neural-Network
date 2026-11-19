@@ -21,9 +21,9 @@ def gradient_check(
     network.backward(criterion.backward())
 
     all_passed = True
-    print("=" * 80)
+    print("=" * 90)
     print(f"{'Layer':<10} | {'Param':<6} | {'Index':<8} | {'Analytical':<14} | {'Numerical':<14} | {'Rel Error':<12} | Status")
-    print("-" * 80)
+    print("-" * 90)
 
     for layer_idx, layer in enumerate(network.layers):
         if not hasattr(layer, "W"):
@@ -61,7 +61,7 @@ def gradient_check(
                 )
                 it.iternext()
 
-    print("=" * 80)
+    print("=" * 90)
     return all_passed
 
 
