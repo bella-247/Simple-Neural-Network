@@ -88,7 +88,26 @@ def main():
     test_loss = loss_fn.forward(model.forward(test_X), test_Y)
     print(f"\nTest Accuracy: {acc:.2f}% | Test Loss: {test_loss:.6f}")
 
-    # 5. Visualization (saves with dataset prefix)
+
+
+
+    # 5. Print final trained parameters
+    print("\n" + "=" * 55)
+    print("🎯 Final Trained Parameters (Weights & Biases):")
+    print("=" * 55)
+    l1, l2 = model.layers[0], model.layers[2]
+    print("Layer 1 (Hidden Layer):")
+    print(f"  w11 = {l1.W[0, 0]:+.6f},  w12 = {l1.W[0, 1]:+.6f}")
+    print(f"  w21 = {l1.W[1, 0]:+.6f},  w22 = {l1.W[1, 1]:+.6f}")
+    print(f"  b1  = {l1.b[0]:+.6f},  b2  = {l1.b[1]:+.6f}")
+    print("\nLayer 2 (Output Layer):")
+    print(f"  w_out1 = {l2.W[0, 0]:+.6f},  w_out2 = {l2.W[0, 1]:+.6f}")
+    print(f"  b_out  = {l2.b[0]:+.6f}")
+    print("=" * 55)
+
+
+
+    # 6. Visualization (saves with dataset prefix)
     plot_results(model, test_X, test_Y, losses, prefix=dataset_name)
 
 
