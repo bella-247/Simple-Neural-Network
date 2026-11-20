@@ -1,3 +1,4 @@
+from nn import BCELoss
 import os
 import sys
 import numpy as np
@@ -62,11 +63,14 @@ def main():
     if dataset_name == "moons":
         print("Dataset: Two Moons")
         X, y = data.make_moons(n_samples=300, noise=0.1, seed=42)
+        test_X, test_Y = data.make_moons(n_samples=100, noise=0.1, seed=123)
     else:
         print("Dataset: XOR")
         X, y = data.make_xor(n_samples=300, noise=0.08, seed=42)
+        test_X, test_Y = data.make_xor(n_samples=100, noise=0.08, seed=123)
 
     # 2. Network architecture: 2 inputs -> 2 hidden (Sigmoid) -> 1 output
+    np.random.seed(42)
     model = Network([
         Linear(in_features=2, out_features=2),
         Sigmoid(),
@@ -74,17 +78,18 @@ def main():
     ])
 
     # 3. Train
-    criterion = MSELoss()
-    trainer = Trainer(model, criterion, learning_rate=0.1)
+    loss_fn = MSELoss()
+    trainer = Trainer(model, loss_fn, learning_rate=0.1)
     losses = trainer.fit(X, y, epochs=3000, print_every=100)
 
-    # 4. Evaluation
-    preds = (model.forward(X) >= 0.5).astype(int)
-    acc = np.mean(preds == y) * 100.0
-    print(f"\nFinal Accuracy: {acc:.2f}% | Final Loss: {losses[-1]:.6f}")
+    # 4. Evaluation (using unseen test data)
+    preds = (model.forward(test_X) >= 0.5).astype(int)
+    acc = np.mean(preds == test_Y) * 100.0
+    test_loss = loss_fn.forward(model.forward(test_X), test_Y)
+    print(f"\nTest Accuracy: {acc:.2f}% | Test Loss: {test_loss:.6f}")
 
     # 5. Visualization (saves with dataset prefix)
-    plot_results(model, X, y, losses, prefix=dataset_name)
+    plot_results(model, test_X, test_Y, losses, prefix=dataset_name)
 
 
 if __name__ == "__main__":
